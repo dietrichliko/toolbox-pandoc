@@ -32,6 +32,7 @@ RUN dnf -y install make texlive-scheme-full && \
     dnf clean all
 
 # Install pandoc
+RUN echo "Building for architecture: ${TARGETARCH}"
 
 RUN URL=$(curl -s https://api.github.com/repos/jgm/pandoc/releases/latest | jq -r --arg match "${TARGETARCH}.tar.gz" '.assets.[] | select(.name | endswith($match)).browser_download_url');\
     curl -sLO $URL; \
