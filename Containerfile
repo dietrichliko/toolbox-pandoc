@@ -1,8 +1,9 @@
+FROM registry.fedoraproject.org/fedora-toolbox:${FEDORA_VERSION}
+
 ARG FEDORA_VERSION
 ARG BUILD_DATE
 ARG VCS_REF
 ARG TARGETARCH
-FROM registry.fedoraproject.org/fedora-toolbox:${FEDORA_VERSION}
 
 LABEL org.opencontainers.image.title="My Pandoc Fedora Toolbox pandoc"
 LABEL org.opencontainers.image.description="A Fedora-based development container with pandoc and latex"
