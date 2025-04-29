@@ -25,10 +25,10 @@ jobs:
       - name: Clone the repository
         uses: actions/checkout@v4
 
-      - name: Set up Buildah with QEMU
-        uses: redhat-actions/setup-buildah@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
         with:
-          install-qemu: true
+          platforms: linux/amd64,linux/arm64
 
       - name: Log in to the GitHub Container registry
         uses: redhat-actions/podman-login@v1
