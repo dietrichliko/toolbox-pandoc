@@ -1,9 +1,10 @@
 FROM registry.fedoraproject.org/fedora-toolbox:${FEDORA_VERSION}
 
 ARG FEDORA_VERSION
+FROM registry.fedoraproject.org/fedora-toolbox:${FEDORA_VERSION}
+
 ARG BUILD_DATE
 ARG VCS_REF
-ARG TARGETARCH
 
 LABEL org.opencontainers.image.title="My Pandoc Fedora Toolbox pandoc"
 LABEL org.opencontainers.image.description="A Fedora-based development container with pandoc and latex"
@@ -35,7 +36,13 @@ RUN dnf -y install make texlive-scheme-full && \
 # Install pandoc
 RUN echo "Building for architecture: ${TARGETARCH}"
 
-RUN URL=$(curl -s https://api.github.com/repos/jgm/pandoc/releases/latest | jq -r --arg match "${TARGETARCH}.tar.gz" '.assets.[] | select(.name | endswith($match)).browser_download_url');\
+RUN TARGETARCH=$(uname -m); \
+    case "$TARGETARCH" in \
+        x86_64) TARGETARCH="amd64" ;; \
+        aarch64) TARGETARCH="arm64" ;; \
+        *) echo "Unsupported architecture: $TARGETARCH" && exit 1 ;; \
+    esac; \
+    URL=$(curl -s https://api.github.com/repos/jgm/pandoc/releases/latest | jq -r --arg match "${TARGETARCH}.tar.gz" '.assets.[] | select(.name | endswith($match)).browser_download_url');\
     curl -sLO $URL; \
     tar xzvf pandoc-*-linux-${TARGETARCH}.tar.gz --strip-components=1 -C /usr/local; \
     rm pandoc-*-linux-${TARGETARCH}.tar.gz
